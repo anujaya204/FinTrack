@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Transaction - FinTrack</title>
+
+    <link rel="stylesheet" href="{% static 'finance/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">F</span>FinTrack</a>
+
+        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+    </nav>
+
+    <main class="container">
+
+        <section class="transactions form-card">
+
+            <h2>Edit Transaction</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div>
+                    <label>Amount</label>
+
+                    <input
+                        type="number"
+                        name="amount"
+                        step="0.01"
+                        value="{{ transaction.amount }}"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label>Transaction Type</label>
+
+                    <select name="transaction_type" required>
+
+                        <option
+                            value="income"
+                            {% if transaction.transaction_type == 'income' %}selected{% endif %}
+                        >
+                            Income
+                        </option>
+
+                        <option
+                            value="expense"
+                            {% if transaction.transaction_type == 'expense' %}selected{% endif %}
+                        >
+                            Expense
+                        </option>
+
+                    </select>
+                </div>
+
+                <div>
+                    <label>Category</label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        value="{{ transaction.category }}"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label>Date</label>
+
+                    <input
+                        type="date"
+                        name="date"
+                        value="{{ transaction.date|date:'Y-m-d' }}"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label>Description</label>
+
+                    <textarea
+                        name="description"
+                        rows="4"
+                    >{{ transaction.description }}</textarea>
+                </div>
+
+                <button class="primary-button" type="submit">
+                    Save Changes
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

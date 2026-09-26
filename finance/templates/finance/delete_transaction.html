@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Transaction - FinTrack</title>
+
+    <link rel="stylesheet" href="{% static 'finance/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">F</span>FinTrack</a>
+
+        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+    </nav>
+
+    <main class="container">
+
+        <section class="transactions form-card delete-card">
+
+            <h2>Delete Transaction</h2>
+
+            <p class="confirmation-copy">
+                Are you sure you want to delete this transaction?
+            </p>
+
+            <p class="transaction-summary">
+                <strong>Rs. {{ transaction.amount }}</strong>
+                -
+                {{ transaction.category }}
+            </p>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-actions">
+                <button class="danger-button" type="submit">
+                    Yes, Delete
+                </button>
+
+                <a class="secondary-button" href="{% url 'dashboard' %}">
+                    Cancel
+                </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

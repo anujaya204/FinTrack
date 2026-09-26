@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up - FinTrack</title>
+
+    <link rel="stylesheet" href="{% static 'finance/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a class="brand" href="{% url 'login' %}"><span class="brand-mark">F</span>FinTrack</a>
+
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+    </nav>
+
+    <main class="container">
+
+        <section class="transactions form-card">
+
+            <h2>Create Account</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button class="primary-button" type="submit">
+                    Create Account
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
