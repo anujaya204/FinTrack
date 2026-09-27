@@ -29,70 +29,14 @@
 
                 {% csrf_token %}
 
-                <div>
-                    <label>Amount</label>
-
-                    <input
-                        type="number"
-                        name="amount"
-                        step="0.01"
-                        value="{{ transaction.amount }}"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Transaction Type</label>
-
-                    <select name="transaction_type" required>
-
-                        <option
-                            value="income"
-                            {% if transaction.transaction_type == 'income' %}selected{% endif %}
-                        >
-                            Income
-                        </option>
-
-                        <option
-                            value="expense"
-                            {% if transaction.transaction_type == 'expense' %}selected{% endif %}
-                        >
-                            Expense
-                        </option>
-
-                    </select>
-                </div>
-
-                <div>
-                    <label>Category</label>
-
-                    <input
-                        type="text"
-                        name="category"
-                        value="{{ transaction.category }}"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Date</label>
-
-                    <input
-                        type="date"
-                        name="date"
-                        value="{{ transaction.date|date:'Y-m-d' }}"
-                        required
-                    >
-                </div>
-
-                <div>
-                    <label>Description</label>
-
-                    <textarea
-                        name="description"
-                        rows="4"
-                    >{{ transaction.description }}</textarea>
-                </div>
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div>
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
 
                 <button class="primary-button" type="submit">
                     Save Changes

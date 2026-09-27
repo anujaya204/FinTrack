@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Transactions - FinTrack</title>
+    <link rel="stylesheet" href="{% static 'finance/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">F</span>FinTrack</a>
+        <div class="nav-actions">
+            <a class="nav-link secondary-nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+            <a class="nav-link" href="{% url 'add_transaction' %}">Add Transaction</a>
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="transactions">
+            <div class="section-heading">
+                <div>
+                    <h2>All Transactions</h2>
+                    <p>Review and manage every transaction in your account.</p>
+                </div>
+                <nav class="transaction-filters" aria-label="Transaction filters">
+                    <a class="filter-link {% if transaction_filter == 'all' %}is-active{% endif %}" href="{% url 'all_transactions' %}?type=all{% if search_query %}&amp;search={{ search_query|urlencode }}{% endif %}">All</a>
+                    <a class="filter-link {% if transaction_filter == 'income' %}is-active{% endif %}" href="{% url 'all_transactions' %}?type=income{% if search_query %}&amp;search={{ search_query|urlencode }}{% endif %}">Income</a>
+                    <a class="filter-link {% if transaction_filter == 'expense' %}is-active{% endif %}" href="{% url 'all_transactions' %}?type=expense{% if search_query %}&amp;search={{ search_query|urlencode }}{% endif %}">Expense</a>
+                </nav>
+            </div>
+
+            <form class="search-form" method="GET" action="{% url 'all_transactions' %}">
+                <input type="hidden" name="type" value="{{ transaction_filter }}">
+                <label class="sr-only" for="all-transaction-search">Search transactions</label>
+                <input id="all-transaction-search" type="search" name="search" value="{{ search_query }}" placeholder="Search by category, type, or description">
+                <button class="search-button" type="submit">Search</button>
+                {% if search_query %}
+                    <a class="clear-search" href="{% url 'all_transactions' %}?type={{ transaction_filter }}">Clear</a>
+                {% endif %}
+            </form>
+
+            {% if page_obj.object_list %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in page_obj %}
+                                <tr>
+                                    <td>{{ transaction.date }}</td>
+                                    <td>{{ transaction.category }}</td>
+                                    <td>
+                                        {% if transaction.transaction_type == 'income' %}
+                                            <span class="income-text">Income</span>
+                                        {% else %}
+                                            <span class="expense-text">Expense</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="amount">Rs. {{ transaction.amount }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td class="transaction-actions">
+                                        <a href="{% url 'edit_transaction' transaction.id %}">Edit</a>
+                                        <a href="{% url 'delete_transaction' transaction.id %}">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if page_obj.has_other_pages %}
+                    <nav class="pagination" aria-label="Transaction pages">
+                        {% if page_obj.has_previous %}
+                            <a href="?type={{ transaction_filter }}&amp;search={{ search_query|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Previous</a>
+                        {% endif %}
+                        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_next %}
+                            <a href="?type={{ transaction_filter }}&amp;search={{ search_query|urlencode }}&amp;page={{ page_obj.next_page_number }}">Next</a>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">+</div>
+                    <p>No transactions match your current search and filter.</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

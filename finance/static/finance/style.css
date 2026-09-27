@@ -86,6 +86,8 @@ a { color: var(--blue); }
 
 .nav-link { background: var(--blue); color: var(--white); }
 .nav-link:hover { background: var(--blue-dark); color: var(--white); }
+.secondary-nav-link { background: transparent; border-color: rgba(255, 255, 255, 0.28); }
+.secondary-nav-link:hover { background: var(--navy-soft); }
 .nav-actions button { background: var(--navy-soft); color: var(--white); }
 .nav-actions button:hover { background: #28486d; color: var(--white); }
 
@@ -123,6 +125,10 @@ a { color: var(--blue); }
 .income-card p { color: var(--green); }
 .expense-card p { color: var(--red); }
 .balance-card p { color: var(--blue); }
+.analytics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
+.analytics-panel { min-width: 0; padding: 22px 24px; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+.analytics-panel .section-heading { margin-bottom: 12px; }
+.chart-wrap { position: relative; height: 260px; }
 
 .transactions { padding: 26px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
@@ -153,6 +159,9 @@ tbody tr:hover { background: #fbfcfe; }
 .transaction-actions a { margin-right: 12px; font-size: 13px; font-weight: 700; text-decoration: none; }
 .transaction-actions a:last-child { margin-right: 0; color: var(--red); }
 .transaction-actions a:hover { text-decoration: underline; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 22px; color: var(--muted); font-size: 13px; }
+.pagination a { padding: 8px 12px; border: 1px solid var(--line); border-radius: 7px; color: var(--blue); font-weight: 700; text-decoration: none; }
+.pagination a:hover { background: var(--blue-pale); }
 
 .empty-state { padding: 34px 16px 20px; text-align: center; }
 .empty-icon { width: 44px; height: 44px; display: grid; place-items: center; margin: 0 auto 14px; border-radius: 12px; background: var(--blue-pale); color: var(--blue); font-size: 20px; font-weight: 800; }
@@ -190,6 +199,7 @@ button:hover { background: var(--blue-dark); }
     .nav-actions form, .nav-link, .nav-actions button { flex: 1; }
     .container { width: min(100% - 32px, 620px); padding-top: 32px; }
     .cards { grid-template-columns: 1fr; gap: 12px; }
+    .analytics-grid { grid-template-columns: 1fr; gap: 12px; }
     .transactions { padding: 20px 16px; }
     .section-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
     .transaction-filters { width: 100%; }

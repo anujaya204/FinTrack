@@ -17,6 +17,7 @@
     <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">F</span>FinTrack</a>
 
     <div class="nav-actions">
+    <a class="nav-link secondary-nav-link" href="{% url 'all_transactions' %}">All Transactions</a>
     <a class="nav-link" href="{% url 'add_transaction' %}">Add Transaction</a>
         
 
@@ -34,6 +35,32 @@
         <section class="welcome">
             <h2>Welcome, {{ user.username }}</h2>
             <p>Manage your income and expenses in one place.</p>
+        </section>
+
+        <section class="analytics-grid" aria-label="Financial analytics">
+            <div class="analytics-panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Income vs Expenses</h2>
+                        <p>Your totals for the current account.</p>
+                    </div>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="income-expense-chart" aria-label="Income versus expenses chart"></canvas>
+                </div>
+            </div>
+
+            <div class="analytics-panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Expense by Category</h2>
+                        <p>Where your expenses are going.</p>
+                    </div>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="expense-category-chart" aria-label="Expenses by category chart"></canvas>
+                </div>
+            </div>
         </section>
 
         <section class="cards">
@@ -146,6 +173,49 @@
         </section>
 
     </main>
+
+    {{ expense_categories|json_script:"expense-category-data" }}
+    {{ income_expense_totals|json_script:"income-expense-data" }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        const expenseCategories = JSON.parse(
+            document.getElementById('expense-category-data').textContent
+        );
+
+        new Chart(document.getElementById('income-expense-chart'), {
+            type: 'bar',
+            data: {
+                labels: ['Income', 'Expenses'],
+                datasets: [{
+                    data: JSON.parse(document.getElementById('income-expense-data').textContent),
+                    backgroundColor: ['#16834b', '#c2414d'],
+                    borderRadius: 6,
+                    maxBarThickness: 56,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } },
+            },
+        });
+
+        new Chart(document.getElementById('expense-category-chart'), {
+            type: 'doughnut',
+            data: {
+                labels: expenseCategories.map(item => item.category),
+                datasets: [{
+                    data: expenseCategories.map(item => item.total),
+                    backgroundColor: ['#2563eb', '#16834b', '#c2414d', '#e09f3e', '#7c5cff', '#159a9c'],
+                    borderWidth: 0,
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+            },
+        });
+    </script>
 
 </body>
 </html>

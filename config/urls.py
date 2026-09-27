@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from finance.views import (
     dashboard,
+    all_transactions,
     add_transaction,
     edit_transaction,
     delete_transaction,
@@ -14,6 +15,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', dashboard, name='dashboard'),
+
+    path(
+        'transactions/',
+        all_transactions,
+        name='all_transactions'
+    ),
 
     path('add/', add_transaction, name='add_transaction'),
 
