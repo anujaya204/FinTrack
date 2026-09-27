@@ -16,14 +16,15 @@
     <nav class="navbar">
         <a class="brand" href="{% url 'login' %}"><span class="brand-mark">F</span>FinTrack</a>
 
-        <a class="nav-link" href="{% url 'login' %}">Login</a>
+        <a class="nav-link secondary-nav-link" href="{% url 'login' %}">Login</a>
     </nav>
 
     <main class="container">
 
-        <section class="transactions form-card">
+        <section class="transactions form-card auth-card">
 
             <h2>Create Account</h2>
+            <p class="page-subtitle">A clearer view of your personal finances starts here.</p>
 
             <form method="POST">
 

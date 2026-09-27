@@ -33,8 +33,34 @@
     <main class="container">
 
         <section class="welcome">
-            <h2>Welcome, {{ user.username }}</h2>
-            <p>Manage your income and expenses in one place.</p>
+            <span class="welcome-kicker">Personal finance</span>
+            <h1>Welcome, {{ user.username }}</h1>
+            <p>Here's your financial overview.</p>
+        </section>
+
+        <section class="cards">
+
+            <div class="card income-card">
+                <span class="summary-icon" aria-hidden="true">&#8599;</span>
+                 <h3>Total Income</h3>
+                 <p>Rs. {{ total_income }}</p>
+                 <span class="card-caption">Money in</span>
+            </div>
+
+           <div class="card expense-card">
+                <span class="summary-icon" aria-hidden="true">&#8600;</span>
+                <h3>Total Expenses</h3>
+                <p>Rs. {{ total_expenses }}</p>
+                <span class="card-caption">Money out</span>
+           </div>
+
+           <div class="card balance-card">
+                <span class="summary-icon" aria-hidden="true">=</span>
+                <h3>Balance</h3>
+                <p>Rs. {{ balance }}</p>
+                <span class="card-caption">Available balance</span>
+          </div>
+
         </section>
 
         <section class="analytics-grid" aria-label="Financial analytics">
@@ -61,25 +87,6 @@
                     <canvas id="expense-category-chart" aria-label="Expenses by category chart"></canvas>
                 </div>
             </div>
-        </section>
-
-        <section class="cards">
-
-            <div class="card income-card">
-            <h3>Total Income</h3>
-            <p>Rs. {{ total_income }}</p>
-            </div>
-
-           <div class="card expense-card">
-           <h3>Total Expenses</h3>
-           <p>Rs. {{ total_expenses }}</p>
-           </div>
-
-           <div class="card balance-card">
-           <h3>Balance</h3>
-           <p>Rs. {{ balance }}</p>
-          </div>
-
         </section>
 
         <section class="transactions">
@@ -114,7 +121,7 @@
 
             {% if transactions %}
 
-                <div class="table-wrap">
+                <div class="table-wrap" role="region" aria-label="Transactions table" tabindex="0">
                 <table>
 
                     <thead>
@@ -170,6 +177,7 @@
 
             {% endif %}
 
+            <div class="section-footer"><a href="{% url 'all_transactions' %}">View all transactions <span aria-hidden="true">&rarr;</span></a></div>
         </section>
 
     </main>
@@ -181,6 +189,9 @@
         const expenseCategories = JSON.parse(
             document.getElementById('expense-category-data').textContent
         );
+
+        Chart.defaults.font.family = '"Segoe UI", "Helvetica Neue", sans-serif';
+        Chart.defaults.color = '#596579';
 
         new Chart(document.getElementById('income-expense-chart'), {
             type: 'bar',
@@ -196,7 +207,15 @@
             options: {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } },
+                scales: {
+                    x: { grid: { display: false }, border: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        border: { display: false },
+                        grid: { color: '#edf1f6' },
+                        ticks: { maxTicksLimit: 5 },
+                    },
+                },
             },
         });
 
@@ -206,13 +225,23 @@
                 labels: expenseCategories.map(item => item.category),
                 datasets: [{
                     data: expenseCategories.map(item => item.total),
-                    backgroundColor: ['#2563eb', '#16834b', '#c2414d', '#e09f3e', '#7c5cff', '#159a9c'],
-                    borderWidth: 0,
+                    backgroundColor: expenseCategories.map((item, index) => {
+                        const palette = ['#2563eb', '#16834b', '#c2414d', '#b7791f', '#7c5cff', '#087f8c', '#be5683', '#52647e'];
+                        return palette[index] || `hsl(${(index * 137.508) % 360}, 55%, 45%)`;
+                    }),
+                    borderColor: '#ffffff',
+                    borderWidth: 3,
                 }],
             },
             options: {
                 maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' } },
+                cutout: '68%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 14 },
+                    },
+                },
             },
         });
     </script>
